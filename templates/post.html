@@ -25,7 +25,6 @@
     <div class="row gx-4 gx-lg-5 justify-content-center">
       <div class="col-md-10 col-lg-8 col-xl-7">
         {{ post.body|safe }}
-        <!--TODO: Only show Edit Post button if user id is 1 (admin user) -->
           {% if current_user.get_id() == '1' %}
             <div class="d-flex justify-content-end mb-4">
               <a
@@ -37,11 +36,9 @@
           {% endif %}
 
         <!-- Comments Area -->
-        <!-- TODO: Add a CKEditor for commenting below -->
         {{ ckeditor.load() }}
         {{ render_form(form) }}
         <div class="comment">
-          <!-- TODO: Show all the comments on a post -->
           <ul class="commentList">
               {% for n in post.blog_comments %}
                 <li>
@@ -50,7 +47,7 @@
                   </div>
                   <div class="commentText">
                     <p>{{ n.text|safe }}</p>
-                    <span class="date sub-text">{{ post.author.name }}</span>
+                    <span class="date sub-text">{{ n.comment_author.name }}</span>
                   </div>
                 </li>
               {% endfor %}
