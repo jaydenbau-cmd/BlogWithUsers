@@ -9,10 +9,10 @@
     <div class="row gx-4 gx-lg-5 justify-content-center">
       <div class="col-md-10 col-lg-8 col-xl-7">
         <div class="page-heading">
-          {% if msg_sent: %}
-          <h1>Successfully sent your message</h1>
-          {% else: %}
-          <h1>Contact Me</h1>
+          {% if msg_sent %}
+            <h1>Successfully sent your message</h1>
+          {% else %}
+            <h1>Contact Me</h1>
           {% endif %}
           <span class="subheading">Have questions? I have answers.</span>
         </div>
@@ -30,13 +30,11 @@
           I will get back to you as soon as possible!
         </p>
         <div class="my-5">
-          <!-- * * * * * * * * * * * * * * *-->
-          <!-- * * Simplified SB Contact Form for the Tutorial* *-->
           <form
+            action="/contact"
+            method="post"
             id="contactForm"
             name="sentMessage"
-            action="{{ url_for('contact') }}"
-            method="post"
           >
             <div class="form-floating">
               <input
@@ -84,11 +82,11 @@
             </div>
             <br />
             <button
-              class="btn btn-danger text-uppercase"
+              class="btn btn-primary text-uppercase"
               id="submitButton"
               type="submit"
             >
-              NOT USED in Day 69
+              Send
             </button>
           </form>
         </div>
