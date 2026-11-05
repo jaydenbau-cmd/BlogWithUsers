@@ -8,7 +8,7 @@
     />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <title>Angela's Blog</title>
+    <title>Jayden's Blog</title>
     {% block styles %}
     {{ bootstrap.load_css() }}
     <link
@@ -40,7 +40,7 @@
     <!-- Navigation-->
     <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
       <div class="container px-4 px-lg-5">
-        <a class="navbar-brand" href="/">Start Bootstrap</a>
+        <a class="navbar-brand" href="/">Jayden's Blog</a>
         <button
           class="navbar-toggler"
           type="button"
@@ -78,13 +78,15 @@
                   >
                 </li>
               {% endif %}
-            <li class="nav-item">
-              <a
-                class="nav-link px-lg-3 py-3 py-lg-4"
-                href="{{ url_for('logout') }}"
-                >Log Out</a
-              >
-            </li>
+            {% if current_user.is_authenticated %}
+              <li class="nav-item">
+                <a
+                  class="nav-link px-lg-3 py-3 py-lg-4"
+                  href="{{ url_for('logout') }}"
+                  >Log Out</a
+                >
+              </li>
+            {% endif %}
             <li class="nav-item">
               <a
                 class="nav-link px-lg-3 py-3 py-lg-4"

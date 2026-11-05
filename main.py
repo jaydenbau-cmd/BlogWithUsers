@@ -15,9 +15,9 @@ from smtplib import SMTP
 
 load_dotenv()
 
-MY_EMAIL = os.environ['EMAIL_ADDRESS']
-MY_PASSWORD = os.environ['EMAIL_PASSWORD']
-SMTP_SERVER = os.environ['SMTP_ADDRESS']
+MY_EMAIL = os.environ.get('EMAIL_ADDRESS')
+MY_PASSWORD = os.environ.get('EMAIL_PASSWORD')
+SMTP_SERVER = os.environ.get('SMTP_ADDRESS')
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get("FLASK_KEY")
@@ -201,6 +201,7 @@ def edit_post(post_id):
     return render_template("make-post.html", form=edit_form, is_edit=True)
 
 @app.route("/delete/<int:post_id>")
+@admin_only
 def delete_post(post_id):
     post_to_delete = db.get_or_404(BlogPost, post_id)
     db.session.delete(post_to_delete)
@@ -213,25 +214,30 @@ def about():
 
 @app.route("/contact", methods=["GET", "POST"])
 def contact():
-    error = None
     if request.method == 'POST':
         data = request.form
         name = data['name']
         email = data['email']
         phone = data['phone']
         message = data['message']
-        with SMTP(SMTP_SERVER) as connection:
-            connection.starttls()
-            connection.login(MY_EMAIL, MY_PASSWORD)
-            connection.sendmail(
-                from_addr=MY_EMAIL,
-                to_addrs=MY_EMAIL,
-                msg=f"\n\nName: {name}\nEmail: {email}\nPhone: {phone}\nMessage: {message}"
-            )
+
+        body = f"\n\nName: {name}\nEmail: {email}\nPhone: {phone}\nMessage: {message}"
+
+        if SMTP_SERVER and MY_EMAIL and MY_PASSWORD:
+            with SMTP(SMTP_SERVER) as connection:
+                connection.starttls()
+                connection.login(MY_EMAIL, MY_PASSWORD)
+                connection.sendmail(
+                    from_addr=MY_EMAIL,
+                    to_addrs=MY_EMAIL,
+                    msg=body,
+                )
+        else:
+            print(f"[EMAIL DISABLED] Contact form submission:{body}")
+
         return render_template('contact.html', msg_sent=True)
-    else:
-        return render_template('contact.html', msg_sent=False)
+    return render_template('contact.html', msg_sent=False)
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False)
