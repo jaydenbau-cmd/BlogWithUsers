@@ -213,24 +213,29 @@ def about():
 
 @app.route("/contact", methods=["GET", "POST"])
 def contact():
-    error = None
     if request.method == 'POST':
         data = request.form
         name = data['name']
         email = data['email']
         phone = data['phone']
         message = data['message']
-        with SMTP(SMTP_SERVER) as connection:
-            connection.starttls()
-            connection.login(MY_EMAIL, MY_PASSWORD)
-            connection.sendmail(
-                from_addr=MY_EMAIL,
-                to_addrs=MY_EMAIL,
-                msg=f"\n\nName: {name}\nEmail: {email}\nPhone: {phone}\nMessage: {message}"
-            )
+
+        body = f"\n\nName: {name}\nEmail: {email}\nPhone: {phone}\nMessage: {message}"
+
+        if SMTP_SERVER and MY_EMAIL and MY_PASSWORD:
+            with SMTP(SMTP_SERVER) as connection:
+                connection.starttls()
+                connection.login(MY_EMAIL, MY_PASSWORD)
+                connection.sendmail(
+                    from_addr=MY_EMAIL,
+                    to_addrs=MY_EMAIL,
+                    msg=body,
+                )
+        else:
+            print(f"[EMAIL DISABLED] Contact form submission:{body}")
+
         return render_template('contact.html', msg_sent=True)
-    else:
-        return render_template('contact.html', msg_sent=False)
+    return render_template('contact.html', msg_sent=False)
 
 
 if __name__ == "__main__":
